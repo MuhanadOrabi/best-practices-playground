@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMonitor.Domain", "src\HealthMonitor.Domain\HealthMonitor.Domain.csproj", "{CDD09EA3-0AFA-4EDD-B800-B74A9C9490DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMonitor.Application", "src\HealthMonitor.Application\HealthMonitor.Application.csproj", "{0FF335EE-E61D-4374-AE95-4C30C6B69D2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthMonitor.Application.Tests.Unit", "tests\HealthMonitor.Application.Tests.Unit\HealthMonitor.Application.Tests.Unit.csproj", "{F338DC8A-B960-4175-A41B-884EF3300E9A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CDD09EA3-0AFA-4EDD-B800-B74A9C9490DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDD09EA3-0AFA-4EDD-B800-B74A9C9490DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDD09EA3-0AFA-4EDD-B800-B74A9C9490DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDD09EA3-0AFA-4EDD-B800-B74A9C9490DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FF335EE-E61D-4374-AE95-4C30C6B69D2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FF335EE-E61D-4374-AE95-4C30C6B69D2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FF335EE-E61D-4374-AE95-4C30C6B69D2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FF335EE-E61D-4374-AE95-4C30C6B69D2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F338DC8A-B960-4175-A41B-884EF3300E9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F338DC8A-B960-4175-A41B-884EF3300E9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F338DC8A-B960-4175-A41B-884EF3300E9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F338DC8A-B960-4175-A41B-884EF3300E9A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
