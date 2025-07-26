@@ -115,4 +115,3 @@ git tag -a phase-1-clean-architecture -m "Clean Architecture baseline with mocke
 Phase 2 will introduce:
 - Real iDRAC health checker
 - EF Core result writer
-- Integration tests using Testcontainers
