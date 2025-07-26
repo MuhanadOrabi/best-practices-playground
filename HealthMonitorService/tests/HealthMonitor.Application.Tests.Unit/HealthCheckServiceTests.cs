@@ -5,7 +5,7 @@ namespace HealthMonitor.Application.Tests.Unit;
 
 // Tests should be in AAA format
 // Need to teach about: MOQ (what is it - youtube video or simple documentatino), FluentAssertions
-public class HealthCheckServiceTests
+public sealed class HealthCheckServiceTests
 {
     [Fact]
     public async Task CheckAndRecordAsync_CallsCheckerAndWriter()
