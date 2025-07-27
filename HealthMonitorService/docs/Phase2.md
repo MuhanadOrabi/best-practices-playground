@@ -1,4 +1,4 @@
-# 🩺 Phase 2: Real Infrastructure (EF Core + Logging)
+# 🚀 Phase 2 – Infrastructure Plug-in
 
 In this phase, we expand the HealthMonitorService by replacing fake implementations with **real infrastructure** using:
 
@@ -10,104 +10,143 @@ This continues from **Phase 1**, which covered Clean Architecture, configuration
 
 ---
 
-## 🎯 Goal
+## ✅ What Was Added
 
-Write real health check results to a relational database using EF Core, and introduce production-friendly logging and error handling.
+### 1. 🔌 Real Database Writer (EF Core + PostgreSQL)
 
----
+- Implemented `DbHealthCheckResultWriter`, using **EF Core**
+- Registered with DI container in `Program.cs`
+- Schema managed with **migrations** and applied via CLI:
+  ```bash
+  dotnet ef migrations add InitSchema \
+    --project src/HealthMonitor.Infrastructure \
+    --startup-project src/HealthMonitor.Console
 
-## 🧱 What Was Added
+  dotnet ef database update \
+    --project src/HealthMonitor.Infrastructure \
+    --startup-project src/HealthMonitor.Console
+  ```
 
-### 🧩 EF Core Integration
+### 2. 🐘 PostgreSQL via Docker Compose
 
-- Created `HealthMonitorDbContext` in `HealthMonitor.Infrastructure`
-- Added `DbHealthCheckResultWriter` that implements `IHealthCheckResultWriter`
-- Updated `HealthCheckResult` entity to include `Id` for EF compatibility
+```yaml
+db:
+  image: postgres:16
+  container_name: postgres
+  environment:
+    POSTGRES_DB: HealthMonitorDb
+    POSTGRES_USER: healthmonitor
+    POSTGRES_PASSWORD: secret123
+  ports:
+    - "5432:5432"
+  volumes:
+    - pgdata:/var/lib/postgresql/data
+  networks:
+    - healthmonitor-net
 
-### 🔧 Configuration
+volumes:
+  pgdata:
 
-- Database connection string moved to `appsettings.json`
-- Registered `HealthMonitorDbContext` in DI container
-
-### 🪵 Logging
-
-- Introduced [Serilog](https://serilog.net/) for structured console logging
-- Configurable via `appsettings.json`
-
-### 🧯 Error Handling
-
-- `DbHealthCheckResultWriter` wraps DB save calls in `try/catch`
-- Failures are logged with context
-
----
-
-## 🧪 Verifying the Phase
-
-1. Add migration & create DB:
-
-```bash
-dotnet ef migrations add Init --project src/HealthMonitor.Infrastructure --startup-project src/HealthMonitor.Console
-dotnet ef database update --project src/HealthMonitor.Infrastructure --startup-project src/HealthMonitor.Console
+networks:
+  healthmonitor-net:
+    driver: bridge
 ```
 
-2. Run the service:
+Run with:
 
 ```bash
-dotnet run --project src/HealthMonitor.Console
+docker compose up -d
 ```
 
-✅ You should see console logs for successful writes. ✅ Results should appear in your SQL database.
-
----
-
-## 🗃 Sample appsettings.json
+Ensure connection string in `appsettings.json` matches:
 
 ```json
+"ConnectionStrings": {
+  "Default": "Host=localhost;Port=5432;Database=HealthMonitorDb;Username=healthmonitor;Password=secret123"
+}
+```
+
+To reset DB:
+
+```bash
+docker compose down -v && docker compose up -d
+```
+
+---
+
+### 3. ⚙️ Configuration Binding
+
+- Bound custom section `Servers` using:
+
+```csharp
+services.Configure<ServerConfig>(context.Configuration);
+```
+
+- Read servers from config:
+
+```csharp
+var servers = host.Services
+  .GetRequiredService<IConfiguration>()
+  .GetSection("Servers")
+  .Get<List<Server>>();
+```
+
+---
+
+### 4. 📋 Error Handling
+
+- Exceptions from DB failures are caught and logged
+- Hints included to enable retry resiliency via `EnableRetryOnFailure()` for later phases
+
+---
+
+### 5. 📄 Logging with Serilog
+
+- Switched from default logger to **Serilog**
+- Configured in `Program.cs`:
+
+```csharp
+hostBuilder.UseSerilog((context, services, config) =>
 {
-  "ConnectionStrings": {
-    "Default": "Server=localhost;Database=HealthMonitorDb;Trusted_Connection=True;"
-  },
-  "Servers": [
-    {
-      "Name": "Server A",
-      "IpAddress": "10.0.0.1",
-      "Type": "iDRAC",
-      "Username": "admin",
-      "Password": "pass"
+  config.ReadFrom.Configuration(context.Configuration);
+});
+```
+
+- Controlled via `appsettings.json`:
+
+```json
+"Serilog": {
+  "MinimumLevel": {
+    "Default": "Information",
+    "Override": {
+      "Microsoft": "Warning",
+      "Microsoft.EntityFrameworkCore": "Warning"
     }
-  ],
-  "Serilog": {
-    "MinimumLevel": "Information",
-    "WriteTo": [
-      { "Name": "Console" }
-    ],
-    "Enrich": [ "FromLogContext", "WithThreadId" ]
-  }
+  },
+  "WriteTo": [ { "Name": "Console" } ]
 }
 ```
 
 ---
 
-## 📌 Git Tag
+## 🧠 Design Principles Reinforced
+
+- Plug real infra behind abstractions: `IHealthCheckResultWriter`
+- Maintain testability and separation via DI
+- Respect Clean Architecture boundaries (infrastructure isolated)
+
+---
+
+## 🏁 Tag
+
+Mark the end of this phase:
 
 ```bash
-git tag -a phase-2-infrastructure-logging -m "Real DB writer with EF Core, Serilog logging, and error handling"
-git push origin phase-2-infrastructure-logging
+git tag -a phase-2-infrastructure -m "Phase 2: Real DB writer, Serilog, and config binding"
+git push origin phase-2-infrastructure
 ```
 
 ---
 
-## 🎯 Learning Objectives
-
-| Concept                               | Covered |
-| ------------------------------------- | ------- |
-| EF Core with DI                       | ✅ Yes   |
-| appsettings.json + connection strings | ✅ Yes   |
-| Real infra implementation             | ✅ Yes   |
-| Logging (Serilog)                     | ✅ Yes   |
-| Graceful error handling               | ✅ Yes   |
-
----
-
-Next phase: **Integration Tests** using [Testcontainers](https://github.com/testcontainers/testcontainers-dotnet)
+Ready for [🔜 Phase 3](./Phase3.md): Real health checker + integration tests!
 

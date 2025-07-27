@@ -12,9 +12,7 @@ var hostBuilder = Host.CreateDefaultBuilder(args);
     
 hostBuilder.UseSerilog((context, services, config) =>
 {
-    config
-        .ReadFrom.Configuration(context.Configuration)
-        .WriteTo.Console();
+    config.ReadFrom.Configuration(context.Configuration);
 });
 
 hostBuilder.ConfigureAppConfiguration(config =>
@@ -29,7 +27,7 @@ hostBuilder.ConfigureServices((context, services) =>
     services.AddScoped<IHealthCheckResultWriter, DbHealthCheckResultWriter>();
 
     services.AddDbContext<HealthMonitorDbContext>(options =>
-        options.UseSqlServer(context.Configuration.GetConnectionString("Default")));
+        options.UseNpgsql(context.Configuration.GetConnectionString("Default")));
 
     services.AddScoped<HealthCheckService>();
 });

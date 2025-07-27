@@ -13,6 +13,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00 - Solution Items", "00 - Solution Items", "{302D1D09-FBCE-4E90-AFBC-7E70645FA051}"
 	ProjectSection(SolutionItems) = preProject
 		docs\README.md = docs\README.md
+		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - Core", "01 - Core", "{1EEE7A62-B02C-4C90-905A-9AF2563DABCC}"

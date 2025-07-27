@@ -4,11 +4,11 @@ Welcome! This project grows in learning **phases**.
 
 ## 🔢 Phase Breakdown
 
-| Phase | Description                          | Link          |
-|-------|--------------------------------------|---------------|
+| Phase | Description                          | Link                   |
+|-------|--------------------------------------|------------------------|
 | 1     | Clean Architecture + Unit Tests      | [Phase 1](./Phase1.md) |
 | 2     | EF Core Infra + Logging              | [Phase 2](./Phase2.md) |
-| 3     | Integration Testing (Testcontainers) | [Phase 3](./Phase3.md) |
+| 3     | Integration Testing (Testcontainers) | Planned                |
 
 ---
 
