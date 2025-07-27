@@ -2,27 +2,46 @@
 using HealthMonitor.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using HealthMonitor.Console.Entities;
+using HealthMonitor.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
-// Load configuration
-var config = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false)
-    .Build();
+var hostBuilder = Host.CreateDefaultBuilder(args);
+    
+hostBuilder.UseSerilog((context, services, config) =>
+{
+    config.ReadFrom.Configuration(context.Configuration);
+});
 
-// Option A: Bind to custom ServerConfig class
-var serverConfig = new ServerConfig();
-config.Bind(serverConfig);
-var servers = serverConfig.Servers;
+hostBuilder.ConfigureAppConfiguration(config =>
+{
+    config.AddJsonFile("appsettings.json");
+});
+    
+hostBuilder.ConfigureServices((context, services) =>
+{
+    services.Configure<ServerConfig>(context.Configuration);
+    services.AddSingleton<IHealthChecker, FakeHealthChecker>();
+    services.AddScoped<IHealthCheckResultWriter, DbHealthCheckResultWriter>();
 
-// Option B: Bind directly
-// var servers = config.GetSection("Servers").Get<List<Server>>();
+    services.AddDbContext<HealthMonitorDbContext>(options =>
+        options.UseNpgsql(context.Configuration.GetConnectionString("Default")));
 
-// Compose application
-var checker = new FakeHealthChecker();
-var writer = new ConsoleResultWriter();
-var service = new HealthCheckService(checker, writer);
+    services.AddScoped<HealthCheckService>();
+});
 
-foreach (var server in servers)
+var host = hostBuilder.Build();
+
+var servers = host.Services
+    .GetRequiredService<IConfiguration>()
+    .GetSection("Servers")
+    .Get<List<Server>>();
+
+var service = host.Services.GetRequiredService<HealthCheckService>();
+
+foreach (var server in servers!)
 {
     await service.CheckAndRecordAsync(server);
 }

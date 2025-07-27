@@ -7,7 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\HealthMonitor.Domain\HealthMonitor.Domain.csproj" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.7" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\HealthMonitor.Domain\HealthMonitor.Domain.csproj" />
+    </ItemGroup>
+    
 </Project>
