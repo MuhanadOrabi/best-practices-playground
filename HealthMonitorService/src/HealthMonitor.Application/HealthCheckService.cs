@@ -5,7 +5,6 @@ namespace HealthMonitor.Application;
 // Composition of behavior via injected interfaces (DIP)
 // The service class doesn’t care about how checks are performed or results are saved
 // Easy to mock for unit testing
-// add sealed 
 public sealed class HealthCheckService
 {
     private readonly IHealthChecker _healthChecker;

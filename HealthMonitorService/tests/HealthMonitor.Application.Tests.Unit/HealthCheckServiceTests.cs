@@ -12,13 +12,8 @@ public sealed class HealthCheckServiceTests
     {
         // Arrange
         var server = new Server { Name = "srv01", IpAddress = "10.0.0.1", Type = "iDRAC", Username = "admin", Password = "pass" };
-        var expectedResult = new HealthCheckResult
-        {
-            ServerName = server.Name,
-            IsHealthy = true,
-            Timestamp = DateTime.UtcNow,
-            Message = "Healthy"
-        };
+        var expectedResult = HealthCheckResult.Create(server.Name);
+        expectedResult.MarkAsHealthy("Healthy");
 
         var checkerMock = new Mock<IHealthChecker>();
         var writerMock = new Mock<IHealthCheckResultWriter>();
