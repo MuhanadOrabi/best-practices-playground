@@ -8,7 +8,7 @@ namespace HealthMonitor.Application.Tests.Unit;
 public sealed class HealthCheckServiceTests
 {
     [Fact]
-    public async Task CheckAndRecordAsync_CallsCheckerAndWriter()
+    public async Task HealthCheckService_CheckAndRecordAsync_CallsCheckerAndWriter()
     {
         // Arrange
         var server = new Server { Name = "srv01", IpAddress = "10.0.0.1", Type = "iDRAC", Username = "admin", Password = "pass" };

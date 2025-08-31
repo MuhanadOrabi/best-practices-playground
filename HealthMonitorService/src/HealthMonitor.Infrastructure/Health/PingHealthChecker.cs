@@ -8,7 +8,7 @@ public class PingHealthChecker : IHealthChecker
     public async Task<HealthCheckResult> CheckAsync(Server server, CancellationToken cancellationToken = default)
     {
         var result = HealthCheckResult.Create(server.Name);
-
+        
         try
         {
             using var ping = new Ping();

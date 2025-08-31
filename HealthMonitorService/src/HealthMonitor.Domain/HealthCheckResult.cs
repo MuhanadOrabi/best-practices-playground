@@ -8,7 +8,7 @@ public sealed class HealthCheckResult
     }
     
     public int Id { get; init; }
-    public required string ServerName { get; init; }
+    public string ServerName { get; init; }
     public DateTime Timestamp { get; init; }
     public bool IsHealthy { get; private set; }
     public string? Message { get; private set; }
@@ -26,10 +26,7 @@ public sealed class HealthCheckResult
     
     private void SetHealthStatus(bool isHealthy, string message)
     {
-        if (string.IsNullOrWhiteSpace(message))
-            throw new ArgumentException("Message cannot be empty.", nameof(message));
-
         IsHealthy = isHealthy;
-        Message = message;
+        Message = string.IsNullOrWhiteSpace(message) ? "No Message provided" : message;
     }
 }

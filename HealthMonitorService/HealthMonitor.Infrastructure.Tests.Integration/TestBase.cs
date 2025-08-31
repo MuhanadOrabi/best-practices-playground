@@ -1,5 +1,6 @@
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
+using HealthMonitor.Infrastructure.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,17 +10,20 @@ namespace HealthMonitor.Infrastructure.Tests.Integration;
 
 public abstract class TestBase : IAsyncLifetime
 {
+    private IContainer _dbContainer = null!;
+
     protected IHost TestHost { get; private set; } = null!;
-    protected IContainer _dbContainer = null!;
 
     public async Task InitializeAsync()
     {
-        var _dbContainer = new ContainerBuilder()
+        _dbContainer = new ContainerBuilder()
             .WithImage("postgres:16")
+            .WithName("healthmonitor-test-db")
             .WithEnvironment("POSTGRES_USER", "healthmonitor")
             .WithEnvironment("POSTGRES_PASSWORD", "secret123")
             .WithEnvironment("POSTGRES_DB", "HealthMonitorDb")
-            .WithPortBinding(port: 5432, assignRandomHostPort: true)
+            .WithPortBinding(port: 5432, assignRandomHostPort: false)
+            .WithExposedPort(5423)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(port: 5432))
             .Build();
 
@@ -30,7 +34,7 @@ public abstract class TestBase : IAsyncLifetime
             {
                 var dict = new Dictionary<string, string?>
                 {
-                    ["ConnectionStrings:Default"] = _dbContainer.ConnectionString
+                    ["ConnectionStrings:Default"] = "Host=localhost;Port=5432;Database=HealthMonitorDb;Username=healthmonitor;Password=secret123"
                 };
                 config.AddInMemoryCollection(dict);
             })
@@ -40,6 +44,7 @@ public abstract class TestBase : IAsyncLifetime
                     options.UseNpgsql(context.Configuration.GetConnectionString("Default")));
 
                 // Register real implementations if needed here
+                
             })
             .Build();
 

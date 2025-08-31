@@ -3,6 +3,7 @@ using HealthMonitor.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using HealthMonitor.Console.Entities;
 using HealthMonitor.Domain;
+using HealthMonitor.Infrastructure.DbContext;
 using HealthMonitor.Infrastructure.Health;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

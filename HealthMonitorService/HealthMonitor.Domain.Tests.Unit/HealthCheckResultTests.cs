@@ -54,10 +54,10 @@ public class HealthCheckResultTests
         var result = HealthCheckResult.Create("Invalid Server");
 
         // Act
-        var act = () => result.MarkAsHealthy(message!);
+        result.MarkAsUnhealthy(message!);
 
-        act.Should()
-            .Throw<ArgumentException>()
-            .WithMessage("Message cannot be empty. (Parameter 'message')");
+        // Assert
+        result.IsHealthy.Should().BeFalse();
+        result.Message.Should().Be("No Message provided");
     }
 }
