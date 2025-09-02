@@ -1,5 +1,5 @@
 using HealthMonitor.Domain;
-using HealthMonitor.Infrastructure.DbContext;
+using HealthMonitor.Infrastructure.Configurations;
 using Microsoft.Extensions.Logging;
 
 namespace HealthMonitor.Infrastructure;

@@ -1,6 +1,6 @@
 using FluentAssertions;
 using HealthMonitor.Domain;
-using HealthMonitor.Infrastructure.DbContext;
+using HealthMonitor.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

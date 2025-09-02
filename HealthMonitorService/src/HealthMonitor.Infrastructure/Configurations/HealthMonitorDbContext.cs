@@ -1,9 +1,9 @@
 using HealthMonitor.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace HealthMonitor.Infrastructure.DbContext;
+namespace HealthMonitor.Infrastructure.Configurations;
 
-public class HealthMonitorDbContext : Microsoft.EntityFrameworkCore.DbContext
+public class HealthMonitorDbContext : DbContext
 {
     public HealthMonitorDbContext(DbContextOptions<HealthMonitorDbContext> options)
         : base(options) { }
@@ -14,7 +14,6 @@ public class HealthMonitorDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.HasDefaultSchema("monitoring");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(HealthMonitorDbContext).Assembly);
     }
 }

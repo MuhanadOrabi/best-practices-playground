@@ -3,7 +3,7 @@ using HealthMonitor.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using HealthMonitor.Console.Entities;
 using HealthMonitor.Domain;
-using HealthMonitor.Infrastructure.DbContext;
+using HealthMonitor.Infrastructure.Configurations;
 using HealthMonitor.Infrastructure.Health;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +35,12 @@ hostBuilder.ConfigureServices((context, services) =>
 });
 
 var host = hostBuilder.Build();
+
+using (var scope = host.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<HealthMonitorDbContext>();
+    db.Database.Migrate();
+}
 
 var servers = host.Services
     .GetRequiredService<IConfiguration>()
