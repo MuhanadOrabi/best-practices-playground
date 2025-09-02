@@ -3,31 +3,26 @@ using HealthMonitor.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using HealthMonitor.Console.Entities;
 using HealthMonitor.Domain;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-var hostBuilder = Host.CreateDefaultBuilder(args);
+var hostBuilder = WebApplication.CreateBuilder(args);
     
-hostBuilder.UseSerilog((context, services, config) =>
+hostBuilder.Host.UseSerilog((context, services, config) =>
 {
     config.ReadFrom.Configuration(context.Configuration);
 });
 
-hostBuilder.ConfigureAppConfiguration(config =>
-{
-    config.AddJsonFile("appsettings.json");
-});
+hostBuilder.Configuration.AddJsonFile("appsettings.json");
     
-hostBuilder.ConfigureServices((context, services) =>
+hostBuilder.Host.ConfigureServices((context, services) =>
 {
     services.Configure<ServerConfig>(context.Configuration);
     services.AddSingleton<IHealthChecker, FakeHealthChecker>();
-    services.AddScoped<IHealthCheckResultWriter, DbHealthCheckResultWriter>();
-
-    services.AddDbContext<HealthMonitorDbContext>(options =>
-        options.UseNpgsql(context.Configuration.GetConnectionString("Default")));
+    services.AddScoped<IHealthCheckResultWriter, ConsoleResultWriter>();
 
     services.AddScoped<HealthCheckService>();
 });
